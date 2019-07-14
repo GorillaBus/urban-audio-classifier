@@ -40,6 +40,35 @@ Note that we are using Tensorflow as Keras back-end, you must set this in your ~
 
 The "UrbanSound8K" dataset is a compilation of urban sound recordings, classified in 10 categories according to the paper ["A Dataset and Taxonomy for Urban Sound Research"](https://urbansounddataset.weebly.com/taxonomy.html), which proposes a taxonomical categorization to describe different environmental sound types.
 
+The UrbanSound8K dataset contains 8732 labeled sound slices of varying duration up to 4 seconds. The categorization labels being:
+
+1. Air Conditioner
+1. Car Horn
+1. Children Playing
+1. Dog bark
+1. Drilling
+1. Engine Idling
+1. Gun Shot
+1. Jackhammer
+1. Siren
+1. Street Music
+
+Note that the dataset comes already organized in 10 validation folds. In the case we want to compare our results with other we should stick with this schema.
+
+
+#### Dataset metadata
+
+The included metadata file ("UrbanSound8K/metadata/metadata.csv") provides all the required information about each audio file:
+
+* slice_file_name: The name of the audio file.
+* fsID: The Freesound ID of the recording from which this excerpt (slice) is taken
+* start: The start time of the slice in the original Freesound recording
+* end: The end time of slice in the original Freesound recording
+* salience: A (subjective) salience rating of the sound. 1 = foreground, 2 = background.
+* fold: The fold number (1-10) to which this file has been allocated.
+* classID: A numeric identifier of the sound class.
+* class: The class label name.
+
 
 
 ## N. References
