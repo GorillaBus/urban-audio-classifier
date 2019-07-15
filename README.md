@@ -76,5 +76,7 @@ The included metadata file ("UrbanSound8K/metadata/metadata.csv") provides all t
 * Taxonomical categorization (resume): https://urbansounddataset.weebly.com/taxonomy.html
 * "A Dataset and Taxonomy for Urban Sound Research":
 http://www.justinsalamon.com/uploads/4/3/9/4/4394963/salamon_urbansound_acmmm14.pdf
-* If you are new to Digital Audio: https://theproaudiofiles.com/digital-audio-101-the-basics/
+* Basics of Digital Audio: https://theproaudiofiles.com/digital-audio-101-the-basics/
 * Digital audio conversion: what is Aliasing? https://theproaudiofiles.com/digital-audio-aliasing/
+* Reading wave file headers with Python: https://www.cameronmacleod.com/blog/reading-wave-python
+* The Wave PCM file specification: http://soundfile.sapp.org/doc/WaveFormat/ 
