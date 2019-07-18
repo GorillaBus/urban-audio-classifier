@@ -1,5 +1,7 @@
 # Urban sounds classification with Covnolutional Neural Networks
 
+### *** Under development ***
+
 The objective of this project is to implement CNN models to correctly classify the sounds of the UrbanSound9K dataset. The work has been divided in:
 
 * Data analysis
