@@ -88,3 +88,5 @@ http://www.justinsalamon.com/uploads/4/3/9/4/4394963/salamon_urbansound_acmmm14.
 * Sampling : Signal Digitalization: http://support.ircam.fr/docs/AudioSculpt/3.0/co/Sampling.html
 * Digital audio conversion: what is Aliasing? https://theproaudiofiles.com/digital-audio-aliasing/
 * Mel Frequency Cepstral Coefficient (MFCC) tutorial: http://practicalcryptography.com/miscellaneous/machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/
+* Discussion on odd kernel sizes: https://datascience.stackexchange.com/questions/23183/why-convolutions-always-use-odd-numbers-as-filter-size
+
