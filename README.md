@@ -89,4 +89,5 @@ http://www.justinsalamon.com/uploads/4/3/9/4/4394963/salamon_urbansound_acmmm14.
 * Digital audio conversion: what is Aliasing? https://theproaudiofiles.com/digital-audio-aliasing/
 * Mel Frequency Cepstral Coefficient (MFCC) tutorial: http://practicalcryptography.com/miscellaneous/machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/
 * Discussion on odd kernel sizes: https://datascience.stackexchange.com/questions/23183/why-convolutions-always-use-odd-numbers-as-filter-size
-
+* Discussion about normalized audio for CNNs: https://stackoverflow.com/questions/55513652/which-spectrogram-best-represents-features-of-an-audio-file-for-cnn-based-model/56727927#56727927
+* A Comparison of Audio Signal Preprocessing Methods for Deep Neural Networks on Music Tagging: https://arxiv.org/abs/1709.01922
