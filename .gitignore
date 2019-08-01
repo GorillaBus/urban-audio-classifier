@@ -1,2 +1,5 @@
 models/*
 .ipynb_checkpoints/*
+UrbanSound8K/
+augmented/
+data/*.npy
