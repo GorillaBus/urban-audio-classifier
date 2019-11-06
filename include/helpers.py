@@ -5,6 +5,9 @@ from sklearn import metrics
 import os
 import pickle
 import time
+import struct
+
+
 
 
 """
@@ -13,48 +16,84 @@ import time
 
 
 # Generates/extracts SFTF-MFCC coefficients with Librosa 
-def get_sftf_mfcc(filename, mfcc_max_padding=0, n_fft=2048, hop_length=512, n_mels=128):
+def get_mel_spectogram(file_path, mfcc_max_padding=0, n_fft=2048, hop_length=512, n_mels=128):
     try:
-        y, sr = librosa.load(filename)
+        # Load audio file
+        y, sr = librosa.load(file_path)
+
+        # Normalize audio data between -1 and 1
         normalized_y = librosa.util.normalize(y)
-        
-        stft = librosa.core.stft(normalized_y, n_fft=n_fft, hop_length=hop_length)
-        mel = librosa.feature.melspectrogram(S=stft, n_mels=n_mels)
-        mellog = np.log(mel + 1e-9)
-        melnormalized = librosa.util.normalize(mellog)
+
+        # Generate mel scaled filterbanks
+        mel = librosa.feature.melspectrogram(normalized_y, sr=sr, n_mels=n_mels)
+
+        # Convert sound intensity to log amplitude:
+        mel_db = librosa.amplitude_to_db(abs(mel))
+
+        # Normalize between -1 and 1
+        normalized_mel = librosa.util.normalize(mel_db)
 
         # Should we require padding
-        shape = melnormalized.shape[1]
+        shape = normalized_mel.shape[1]
         if (mfcc_max_padding > 0 & shape < mfcc_max_padding):
             xDiff = mfcc_max_padding - shape
             xLeft = xDiff//2
             xRight = xDiff-xLeft
-            melnormalized = np.pad(melnormalized, pad_width=((0,0), (xLeft, xRight)), mode='constant')
+            normalized_mel = np.pad(normalized_mel, pad_width=((0,0), (xLeft, xRight)), mode='constant')
 
     except Exception as e:
-        print("Error parsing wavefile: ", filename)
+        print("Error parsing wavefile: ", e)
         return None 
-    return melnormalized
+    return normalized_mel
 
 
 # Generates/extracts MFCC coefficients with Librosa 
-def get_mfcc(filename, mfcc_max_padding=0, n_mfcc=128):
+def get_mfcc(file_path, mfcc_max_padding=0, n_mfcc=40):
     try:
-        audio, sample_rate = librosa.load(filename) 
-        mfcc = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=n_mfcc)
+        # Load audio file
+        y, sr = librosa.load(file_path)
+
+        # Normalize audio data between -1 and 1
+        normalized_y = librosa.util.normalize(y)
+
+        # Compute MFCC coefficients
+        mfcc = librosa.feature.mfcc(y=normalized_y, sr=sr, n_mfcc=n_mfcc)
+
+        # Normalize MFCC between -1 and 1
+        normalized_mfcc = librosa.util.normalize(mfcc)
 
         # Should we require padding
-        shape = mfcc.shape[1]
+        shape = normalized_mfcc.shape[1]
         if (mfcc_max_padding > 0 & shape < mfcc_max_padding):
             xDiff = mfcc_max_padding - shape
             xLeft = xDiff//2
             xRight = xDiff-xLeft
-            mfcc = np.pad(mfcc, pad_width=((0,0), (xLeft, xRight)), mode='constant')
+            normalized_mfcc = np.pad(normalized_mfcc, pad_width=((0,0), (xLeft, xRight)), mode='constant')
 
     except Exception as e:
-        print("Error parsing wavefile: ", filename)
+        print("Error parsing wavefile: ", e)
         return None 
-    return mfcc
+    return normalized_mfcc
+
+
+# Given an numpy array of features, zero-pads each ocurrence to max_padding
+def add_padding(features, mfcc_max_padding=174):
+    padded = []
+
+    # Add padding
+    for i in range(len(features)):
+        px = features[i]
+        size = len(px[0])
+        # Add padding if required
+        if (size < mfcc_max_padding):
+            xDiff = mfcc_max_padding - size
+            xLeft = xDiff//2
+            xRight = xDiff-xLeft
+            px = np.pad(px, pad_width=((0,0), (xLeft, xRight)), mode='constant')
+        
+        padded.append(px)
+
+    return padded
 
 
 # Scales data between x_min and x_max
@@ -82,14 +121,56 @@ def save_split_distributions(test_split_idx, train_split_idx, file_path=None):
     return file
 
 
-def load_split_distributions(file_name, path='./data'):
-    file_path = os.path.join(path, file_name)
-
+def load_split_distributions(file_path):
     file = open(file_path, 'rb')
     data = pickle.load(file)
-    
     return [data['test_split_idx'], data['train_split_idx']]
   
+
+def find_dupes(array):
+    seen = {}
+    dupes = []
+
+    for x in array:
+        if x not in seen:
+            seen[x] = 1
+        else:
+            if seen[x] == 1:
+                dupes.append(x)
+            seen[x] += 1
+    return len(dupes)
+
+
+# Reads a file's header data and returns a list of wavefile properties
+def read_header(filename):
+    wave = open(filename,"rb")
+    riff = wave.read(12)
+    fmat = wave.read(36)
+    num_channels_string = fmat[10:12]
+    num_channels = struct.unpack('<H', num_channels_string)[0]
+    sample_rate_string = fmat[12:16]
+    sample_rate = struct.unpack("<I",sample_rate_string)[0]
+    bit_depth_string = fmat[22:24]
+    bit_depth = struct.unpack("<H",bit_depth_string)[0]
+    return (num_channels, sample_rate, bit_depth)
+
+
+# Given a dataset row it returns an audio player and prints the audio properties
+def play_dataset_sample(dataset_row, audio_path):
+    fold_num = dataset_row.iloc[0]['fold']
+    file_name = dataset_row.iloc[0]['file']
+    file_path = os.path.join(audio_path, fold_num, file_name)
+    file_path = os.path.join(audio_path, dataset_row.iloc[0]['fold'], dataset_row.iloc[0]['file'])
+
+    print("Class:", dataset_row.iloc[0]['class'])
+    print("File:", file_path)
+    print("Sample rate:", dataset_row.iloc[0]['sample_rate'])
+    print("Bit depth:", dataset_row.iloc[0]['bit_depth'])
+    print("Duration {} seconds".format(dataset_row.iloc[0]['duration']))
+    
+    # Sound preview
+    return IP.display.Audio(file_path)
+
 
 
 """
@@ -170,8 +251,6 @@ def plot_train_history(history):
     plt.xticks(np.arange(0, len(history['loss']), 5.0))
     plt.show()
 
-
-
     # summarize history for accuracy, display max
     plt.figure(figsize=(16,6))
     plt.plot(history['accuracy'], alpha=0.7)
@@ -193,5 +272,3 @@ def plot_train_history(history):
     plt.figure(num=1, figsize=(10, 6))
     plt.xticks(np.arange(0, len(history['accuracy']), 5.0))
     plt.show()
-
-
