@@ -2,7 +2,7 @@
 
 The objective of this project is to implement CNN models to recognize sound events from the **UrbanSound9K** dataset. The work has been divided into the following notebooks:
 
-1. Data analysis
+1. Data analysis (and related papers brief)
 2. Pre-processing and feature evaluation
 3. CNN model with MFCC 
 4. CNN model with Log-MEL Spectrograms
