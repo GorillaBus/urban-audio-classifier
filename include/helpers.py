@@ -178,24 +178,31 @@ def play_dataset_sample(dataset_row, audio_path):
 """
 
 def evaluate_model(model, X_train, y_train, X_test, y_test):
-    dash = '-' * 38
     train_score = model.evaluate(X_train, y_train, verbose=0)
     test_score = model.evaluate(X_test, y_test, verbose=0)
+    return train_score, test_score
 
-    # Calculate the error gap between Train and Test loss
-    a = max(train_score[0], test_score[0])
-    b = min(train_score[0], test_score[0])
-    loss_diff = a - b
-    loss_gap = loss_diff * 100 / a
 
-    # Pint Train vs Test results
-    print('{:<10s}{:>14s}{:>14s}'.format( "", "LOSS", "ACCURACY"))
+def model_evaluation_report(model, X_train, y_train, X_test, y_test, calc_normal=True):
+    dash = '-' * 38
+
+    # Compute scores
+    train_score, test_score = evaluate_model(model, X_train, y_train, X_test, y_test)
+
+    # Pint Train vs Test report
+    print('{:<10s}{:>14s}{:>14s}'.format("", "LOSS", "ACCURACY"))
     print(dash)
     print('{:<10s}{:>14.4f}{:>14.4f}'.format( "Training:", train_score[0], 100 * train_score[1]))
     print('{:<10s}{:>14.4f}{:>14.4f}'.format( "Test:", test_score[0], 100 * test_score[1]))
-    print('{:<10s}{:>13.2f}{:>14s}'.format( "Error gap %", loss_gap, ""))
 
-    return
+
+    # Calculate and report normalized error difference?
+    if (calc_normal):
+        max_err = max(train_score[0], test_score[0])
+        error_diff = max_err - min(train_score[0], test_score[0])
+        normal_diff = error_diff * 100 / max_err
+        print('{:<10s}{:>13.2f}{:>1s}'.format("Normal diff ", normal_diff, ""))
+
 
 
 # Expects a NumPy array with probabilities and a confusion matrix data, retuns accuracy per class
@@ -215,7 +222,7 @@ def acc_per_class(np_probs_array):
     Plotting
 """
 
-def plot_train_history(history):
+def plot_train_history(history, x_ticks_vertical=False):
     history = history.history
 
     # min loss / max accs
@@ -248,7 +255,12 @@ def plot_train_history(history):
                 framealpha=0.9, 
                 shadow=True, 
                 borderpad=1)
-    plt.xticks(np.arange(0, len(history['loss']), 5.0))
+
+    if (x_ticks_vertical):
+        plt.xticks(np.arange(0, len(history['loss']), 5.0), rotation='vertical')
+    else:
+        plt.xticks(np.arange(0, len(history['loss']), 5.0))
+
     plt.show()
 
     # summarize history for accuracy, display max
@@ -270,7 +282,12 @@ def plot_train_history(history):
                 shadow=True, 
                 borderpad=1)
     plt.figure(num=1, figsize=(10, 6))
-    plt.xticks(np.arange(0, len(history['accuracy']), 5.0))
+
+    if (x_ticks_vertical):
+        plt.xticks(np.arange(0, len(history['accuracy']), 5.0), rotation='vertical')
+    else:
+        plt.xticks(np.arange(0, len(history['accuracy']), 5.0))
+
     plt.show()
 
 
