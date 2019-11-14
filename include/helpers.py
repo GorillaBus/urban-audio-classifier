@@ -15,8 +15,8 @@ import struct
 """
 
 
-# Generates/extracts SFTF-MFCC coefficients with Librosa 
-def get_mel_spectogram(file_path, mfcc_max_padding=0, n_fft=2048, hop_length=512, n_mels=128):
+# Generates/extracts Log-MEL Spectrogram coefficients with LibRosa 
+def get_mel_spectrogram(file_path, mfcc_max_padding=0, n_fft=2048, hop_length=512, n_mels=128):
     try:
         # Load audio file
         y, sr = librosa.load(file_path)
@@ -47,7 +47,7 @@ def get_mel_spectogram(file_path, mfcc_max_padding=0, n_fft=2048, hop_length=512
     return normalized_mel
 
 
-# Generates/extracts MFCC coefficients with Librosa 
+# Generates/extracts MFCC coefficients with LibRosa 
 def get_mfcc(file_path, mfcc_max_padding=0, n_mfcc=40):
     try:
         # Load audio file
