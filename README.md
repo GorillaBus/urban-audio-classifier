@@ -1,4 +1,4 @@
-# Urban sounds classification with Covnolutional Neural Networks
+# Urban sounds classification with Convolutional Neural Networks
 
 The objective of this project is to implement CNN models to recognize sound events from the **UrbanSound9K** dataset. The work has been divided into the following notebooks:
 
@@ -9,6 +9,22 @@ The objective of this project is to implement CNN models to recognize sound even
 5. Data augmentation
 6. Data augmentation pre-processing
 7. CNN model with augmented data (Log-MEL Spectrograms)
+
+## Notebook
+
+1. [Data analysis](https://github.com/GorillaBus/urban-audio-classifier/blob/master/1-data-analysis.ipynb): a brief about previous works with the URbanSound8K dataset (scientific papers), dataset exploration, distribution analysis, listening.
+
+2. [Pre-processing](https://github.com/GorillaBus/urban-audio-classifier/blob/master/2-pre-processing.ipynb): an introduction to different audible features we can use to work with digital audio, the pre-processing pipeline, STFT, MFCC and Log-MEL Spectrograms, feature extraction and data normalization.
+
+3. [CNN model with MFCC features](https://github.com/GorillaBus/urban-audio-classifier/blob/master/3-cnn-model-mfcc.ipynb): data preparation, CNN model definition (with detailed explanation) using Keras and TensorFlow back-end. Solution of a multi-class classification problem, model evaluation and testing, Recall, Precision and F1 analysis.
+
+4. [CNN Model with Log-MEL Spectrograms](https://github.com/GorillaBus/urban-audio-classifier/blob/master/4-cnn-model-mel_spec.ipynb): a performance comparison using the same CNN model architecture with MEL spectrograms. Same training and evaluation than notebook #3.
+
+5. [Data augmentation](https://github.com/GorillaBus/urban-audio-classifier/blob/master/5-data-augmentation.ipynb): creation of augmented data from UrbanSound8K original sounds, using common audio effects like pitch shifting, time stretching, adding noise, with LibROSA.
+
+6. [Augmented pre-processing](https://github.com/GorillaBus/urban-audio-classifier/blob/master/6-augmented-pre-processing.ipynb): audible features extraction from the new generated data.
+
+7. [CNN model with augmented data](https://github.com/GorillaBus/urban-audio-classifier/blob/master/7-cnn-model-augmented.ipynb): using the same CNN architecture and almost identical training procedures with the generated data. Model evaluation and test to compare with previous achievements.
 
 
 ## Getting the dataset
@@ -71,7 +87,7 @@ The included metadata file ("UrbanSound8K/metadata/metadata.csv") provides all t
 
 ## References
 
-1- Data analisys
+1- Data analysis
 * Taxonomical categorization (resume): https://urbansounddataset.weebly.com/taxonomy.html
 * "A Dataset and Taxonomy for Urban Sound Research":
 http://www.justinsalamon.com/uploads/4/3/9/4/4394963/salamon_urbansound_acmmm14.pdf
