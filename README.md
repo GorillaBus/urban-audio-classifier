@@ -10,7 +10,7 @@ The objective of this project is to implement CNN models to recognize sound even
 6. Data augmentation pre-processing
 7. CNN model with augmented data (Log-MEL Spectrograms)
 
-## Notebook
+## Notebooks
 
 1. [Data analysis](https://github.com/GorillaBus/urban-audio-classifier/blob/master/1-data-analysis.ipynb): a brief about previous works with the URbanSound8K dataset (scientific papers), dataset exploration, distribution analysis, listening.
 
